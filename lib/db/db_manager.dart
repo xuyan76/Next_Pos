@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 class DbManager {
   static final DbManager _instance = DbManager._internal();
@@ -12,15 +12,12 @@ class DbManager {
   DbManager._internal();
 
   Future<String> get _dbPath async {
-    // 获取应用文档目录
     final appDir = await getApplicationDocumentsDirectory();
-    // 创建db子目录
     final dbDir = Directory('${appDir.path}/db');
     if (!await dbDir.exists()) {
       await dbDir.create(recursive: true);
     }
 
-    // 生成今天的数据库文件名
     final today = DateFormat('yyyyMMdd').format(DateTime.now());
     return join(dbDir.path, 'posdata_$today.db');
   }
@@ -37,7 +34,6 @@ class DbManager {
     final dbExists = await File(path).exists();
 
     if (!dbExists) {
-      // 如果数据库不存在，复制前一天的数据（如果有的话）
       final yesterday = DateTime.now().subtract(const Duration(days: 1));
       final yesterdayPath = join(
         dirname(path),
@@ -49,10 +45,12 @@ class DbManager {
       }
     }
 
-    return await openDatabase(
+    return await databaseFactoryFfi.openDatabase(
       path,
-      version: 1,
-      onCreate: _onCreate,
+      options: OpenDatabaseOptions(
+        version: 1,
+        onCreate: _onCreate,
+      ),
     );
   }
 
@@ -125,24 +123,33 @@ class DbManager {
 
     if (!await File(dbPath).exists()) return null;
 
-    return await openDatabase(dbPath, version: 1);
+    return await databaseFactoryFfi.openDatabase(
+      dbPath,
+      options: OpenDatabaseOptions(version: 1),
+    );
   }
 
   // 清理旧数据库文件（保留最近30天）
   Future<void> cleanupOldDatabases() async {
     final files = await getAllDatabases();
     final today = DateTime.now();
+    final dateFormat = DateFormat('yyyyMMdd');
 
     for (var file in files) {
       final fileName = basename(file.path);
       final match = RegExp(r'posdata_(\d{8})\.db').firstMatch(fileName);
       if (match != null) {
         final dateStr = match.group(1)!;
-        final fileDate = DateFormat('yyyyMMdd').parse(dateStr);
-        final difference = today.difference(fileDate).inDays;
+        try {
+          final fileDate = dateFormat.parse(dateStr);
+          final difference = today.difference(fileDate).inDays;
 
-        if (difference > 30) {
-          await file.delete();
+          if (difference > 30) {
+            await file.delete();
+          }
+        } catch (e) {
+          print('Error parsing date from filename: $fileName');
+          continue;
         }
       }
     }

@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'config/app_config.dart';
 import 'config/dev_config.dart';
 import 'main.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 初始化 sqflite_ffi
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
+
   AppConfig.initialize(DevConfig());
   runApp(const PaymentApp());
 }

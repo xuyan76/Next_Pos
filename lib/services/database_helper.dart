@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import '../models/product_item.dart';
 import '../models/transaction.dart';
 import '../db/db_manager.dart';
