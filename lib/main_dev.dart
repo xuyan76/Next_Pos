@@ -7,10 +7,12 @@ import 'main.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 初始化 sqflite_ffi
+  // 首先初始化配置
+  AppConfig.initialize(DevConfig());
+
+  // 然后初始化数据库
   sqfliteFfiInit();
   databaseFactory = databaseFactoryFfi;
 
-  AppConfig.initialize(DevConfig());
   runApp(const PaymentApp());
 }

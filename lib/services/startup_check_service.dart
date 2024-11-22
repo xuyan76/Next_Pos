@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'api_service.dart';
 import 'update_service.dart';
-import '../models/version_info.dart';
 
 enum CheckStatus {
   pending,
@@ -38,9 +36,12 @@ class StartupCheckService {
 
   Future<bool> checkBackendService() async {
     try {
-      await ApiService().ping();
-      return true;
+      print('Starting backend service check...');
+      final isHealthy = await ApiService().ping();
+      print('Backend service check result: $isHealthy');
+      return isHealthy;
     } catch (e) {
+      print('Backend service check error: $e');
       return false;
     }
   }
@@ -69,11 +70,16 @@ class StartupCheckService {
 
     // 检查后台服务
     onItemChecked(0, CheckStatus.checking, null);
-    if (await checkBackendService()) {
-      onItemChecked(0, CheckStatus.success, null);
-    } else {
-      onItemChecked(0, CheckStatus.failed, '无法连接到后台服务');
-      return false; // 关键检查失败
+    try {
+      if (await checkBackendService()) {
+        onItemChecked(0, CheckStatus.success, null);
+      } else {
+        onItemChecked(0, CheckStatus.failed, '无法连接到后台服务，请检查网络或联系管理员');
+        return false;
+      }
+    } catch (e) {
+      onItemChecked(0, CheckStatus.failed, '检查后台服务时发生错误: ${e.toString()}');
+      return false;
     }
 
     // 检查更新

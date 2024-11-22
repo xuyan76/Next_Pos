@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'screens/login_screen.dart';
 import 'services/update_service.dart';
 import 'models/version_info.dart';
 import 'widgets/update_dialog.dart';
 import 'screens/startup_check_screen.dart';
 import 'db/db_manager.dart';
+import 'config/app_config.dart';
+import 'config/dev_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // 初始化配置
+  AppConfig.initialize(DevConfig());
 
   // 初始化 sqflite_ffi
   sqfliteFfiInit();
@@ -16,8 +20,8 @@ void main() async {
 
   // 初始化数据库
   final dbManager = DbManager();
-  await dbManager.database; // 确保今天的数据库已创建
-  await dbManager.cleanupOldDatabases(); // 清理旧数据库
+  await dbManager.database;
+  await dbManager.cleanupOldDatabases();
 
   // 检查更新
   final updateService = UpdateService();

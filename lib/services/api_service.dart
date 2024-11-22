@@ -13,12 +13,31 @@ class ApiService {
 
   Future<bool> ping() async {
     try {
-      await _client.get(
-        '/ping',
-        (json) => json['status'] == 'ok',
+      print('Checking backend health...');
+      final response = await _client.get(
+        '/public/health/check',
+        (json) {
+          print('Processing health check response: $json');
+          if (json['code'] != 200) {
+            final message = json['message'] ?? 'Unknown error';
+            print('Health check failed: $message');
+            return false;
+          }
+
+          final data = json['data'] as Map<String, dynamic>;
+          final isHealthy =
+              data['databaseStatus'] == 'OK' && data['redisStatus'] == 'OK';
+
+          if (!isHealthy) {
+            print('Service unhealthy: $data');
+          }
+
+          return isHealthy;
+        },
       );
-      return true;
+      return response;
     } catch (e) {
+      print('Health check error: $e');
       return false;
     }
   }
