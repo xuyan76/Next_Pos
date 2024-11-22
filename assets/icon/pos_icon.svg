@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1024" height="1024" fill="#2196F3"/>
+  <g transform="translate(162,162) scale(0.7)">
+    <!-- POS机主体 -->
+    <rect x="100" y="100" width="800" height="600" rx="40" fill="white"/>
+    <!-- 屏幕 -->
+    <rect x="150" y="150" width="700" height="200" rx="10" fill="#E3F2FD"/>
+    <!-- 数字键盘背景 -->
+    <rect x="150" y="400" width="700" height="250" rx="10" fill="#EEEEEE"/>
+    <!-- 数字键盘按钮 -->
+    <g fill="#424242">
+      <rect x="200" y="420" width="180" height="50" rx="5"/>
+      <rect x="410" y="420" width="180" height="50" rx="5"/>
+      <rect x="620" y="420" width="180" height="50" rx="5"/>
+      
+      <rect x="200" y="490" width="180" height="50" rx="5"/>
+      <rect x="410" y="490" width="180" height="50" rx="5"/>
+      <rect x="620" y="490" width="180" height="50" rx="5"/>
+      
+      <rect x="200" y="560" width="180" height="50" rx="5"/>
+      <rect x="410" y="560" width="180" height="50" rx="5"/>
+      <rect x="620" y="560" width="180" height="50" rx="5"/>
+    </g>
+    <!-- 屏幕上的金额显示 -->
+    <text x="500" y="250" 
+          font-family="Arial" 
+          font-size="80" 
+          fill="#1976D2"
+          text-anchor="middle">
+      ¥99.99
+    </text>
+  </g>
+</svg> 

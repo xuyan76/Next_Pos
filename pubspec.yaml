@@ -1,0 +1,40 @@
+name: winpos
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+  intl: ^0.18.0
+  cupertino_icons: ^1.0.8
+  http: ^1.1.0
+  package_info_plus: ^4.1.0
+  path_provider: ^2.1.1
+  sqflite: ^2.3.0
+  path: ^1.8.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+
+# 图标配置移到这里（根级别）
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/pos_icon.png"
+  windows:
+    generate: true
+    image_path: "assets/icon/pos_icon.png"
+    icon_size: 48
+  macos:
+    generate: true
+    image_path: "assets/icon/pos_icon.png"
+
+flutter:
+  uses-material-design: true
