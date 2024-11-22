@@ -742,14 +742,14 @@ class _HomeScreenState extends State<HomeScreen> {
         // 模拟对应的键盘事件
         switch (key) {
           case '↑':
-            _handleKeyEvent(KeyDownEvent(
+            _handleKeyEvent(const KeyDownEvent(
               physicalKey: PhysicalKeyboardKey.arrowUp,
               logicalKey: LogicalKeyboardKey.arrowUp,
               timeStamp: Duration.zero,
             ));
             break;
           case '↓':
-            _handleKeyEvent(KeyDownEvent(
+            _handleKeyEvent(const KeyDownEvent(
               physicalKey: PhysicalKeyboardKey.arrowDown,
               logicalKey: LogicalKeyboardKey.arrowDown,
               timeStamp: Duration.zero,
@@ -768,7 +768,7 @@ class _HomeScreenState extends State<HomeScreen> {
             // 处理Tab键事件
             break;
           case 'U':
-            _handleKeyEvent(KeyDownEvent(
+            _handleKeyEvent(const KeyDownEvent(
               physicalKey: PhysicalKeyboardKey.keyU,
               logicalKey: LogicalKeyboardKey.keyU,
               timeStamp: Duration.zero,

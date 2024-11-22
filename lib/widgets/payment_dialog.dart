@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../models/payment_record.dart';
 
 class PaymentDialog extends StatefulWidget {
@@ -15,8 +14,8 @@ class PaymentDialog extends StatefulWidget {
 }
 
 class _PaymentDialogState extends State<PaymentDialog> {
-  String _inputAmount = '';
-  int _selectedPaymentMethod = 0;
+  final String _inputAmount = '';
+  final int _selectedPaymentMethod = 0;
   List<PaymentRecord> paymentRecords = [
     PaymentRecord(index: 1, method: '现金', amount: 50.00, change: 0.00),
     PaymentRecord(index: 2, method: '银行卡', amount: 100.00, change: 0.00),

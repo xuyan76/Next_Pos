@@ -4,11 +4,14 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import '../config/app_config.dart';
 import '../models/version_info.dart';
+import 'http_client.dart';
 
 class UpdateService {
   static final UpdateService _instance = UpdateService._internal();
   factory UpdateService() => _instance;
   UpdateService._internal();
+
+  final _client = HttpClient();
 
   Future<bool> checkForUpdates() async {
     try {
@@ -16,20 +19,35 @@ class UpdateService {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       String currentVersion = packageInfo.version;
 
+      print('当前版本: $currentVersion');
+
       // 从服务器获取最新版本信息
-      final response = await http.get(
-        Uri.parse('${AppConfig.instance.apiBaseUrl}/version'),
+      final response = await _client.get(
+        '/public/version/check',
+        (json) {
+          if (json['code'] != 200) return null;
+          return VersionInfo.fromJson(json['data']);
+        },
       );
 
-      if (response.statusCode == 200) {
-        final versionInfo = VersionInfo.fromJson(
-          Map<String, dynamic>.from(response.body as Map),
-        );
+      if (response == null) return false;
 
-        // 比较版本号
-        return _compareVersions(currentVersion, versionInfo.version) < 0;
+      print('服务器版本: ${response.version}');
+
+      // 比较版本号
+      final needUpdate = _compareVersions(currentVersion, response.version) < 0;
+
+      // 如果需要更新，检查是否低于最低支持版本
+      if (needUpdate && response.minVersion != null) {
+        final isObsolete =
+            _compareVersions(currentVersion, response.minVersion!) < 0;
+        if (isObsolete) {
+          print('当前版本低于最低支持版本，需要强制更新');
+          return true;
+        }
       }
-      return false;
+
+      return needUpdate;
     } catch (e) {
       print('检查更新失败: $e');
       return false;
